@@ -8,7 +8,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // TransLink GTFS Realtime feed URL (South East Queensland)
-const GTFS_FEED_URL = 'https://gtfsrt.api.translink.com.au/api/realtime/SEQ/TripUpdates';
+const GTFS_FEED_URL = 'https://gtfsrt.api.translink.com.au/api/v2/seq/trip-updates';
 
 // Target route and stop
 const TARGET_ROUTE = '555';
