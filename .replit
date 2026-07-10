@@ -8,3 +8,6 @@ externalPort = 80
 
 [deployment]
 run = "npm start"
+
+[agent]
+expertMode = true
