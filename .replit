@@ -24,13 +24,13 @@ args = "Yuki Dashboard"
 name = "Yuki Dashboard"
 author = "agent"
 
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "cd yuki-dashboard && npm start"
-waitForPort = 3000
-
 [workflows.workflow.metadata]
 outputType = "webview"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd yuki-dashboard && PORT=3000 npm start"
+waitForPort = 3000
 
 [agent]
 stack = "PNPM_WORKSPACE"

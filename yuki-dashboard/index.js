@@ -5,7 +5,7 @@ const GtfsRealtimeBindings = require('gtfs-realtime-bindings');
 const path = require('path');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 
 // TransLink GTFS Realtime feed URL (South East Queensland)
 const GTFS_FEED_URL = 'https://gtfsrt.api.translink.com.au/api/v2/seq/trip-updates';
