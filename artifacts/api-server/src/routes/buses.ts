@@ -6,7 +6,7 @@ const { transit_realtime } = GtfsRealtimeBindings;
 const router: IRouter = Router();
 
 const GTFS_FEED_URL =
-  "https://gtfsrt.api.translink.com.au/api/v2/seq/trip-updates";
+  "https://gtfsrt.api.translink.com.au/api/realtime/SEQ/TripUpdates";
 const TARGET_ROUTE = "555";
 const TARGET_STOP = "600656";
 
