@@ -14,7 +14,7 @@ app.get("/buses", async (req, res) => {
   try {
     const response = await axios({
       method: "get",
-      url: "https://gtfsrt.api.translink.com.au/api/v2/seq/trip-updates",
+      url: "https://gtfsrt.api.translink.com.au/api/realtime/SEQ/TripUpdates",
       responseType: "arraybuffer",
     });
 
@@ -57,7 +57,10 @@ app.get("/buses", async (req, res) => {
 
     buses.sort((a, b) => a.minutes - b.minutes);
 
-    res.json(buses.slice(0, 3));
+    res.json({
+        fetchedAt: new Date().toISOString(),
+        buses: buses.slice(0, 3)
+    });
   } catch (err) {
     console.log(err.message);
 
@@ -71,5 +74,5 @@ app.get("/buses", async (req, res) => {
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Yuki Dashboard running on http://localhost:${PORT}`);
+  console.log(`Yuki Dashboard running on port ${PORT}`);
 });
