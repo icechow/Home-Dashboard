@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yuki Dashboard — Route 555</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0f1117;
+      color: #e2e8f0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 16px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: #fff;
+    }
+
+    header p {
+      margin-top: 6px;
+      font-size: 0.9rem;
+      color: #64748b;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #f59e0b;
+      color: #0f1117;
+      font-weight: 700;
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      margin-bottom: 10px;
+      letter-spacing: 0.5px;
+    }
+
+    #bus-list {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .bus-card {
+      background: #1e2330;
+      border: 1px solid #2d3448;
+      border-radius: 14px;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .bus-card .left .route {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #f59e0b;
+      line-height: 1;
+    }
+
+    .bus-card .left .trip {
+      font-size: 0.72rem;
+      color: #475569;
+      margin-top: 4px;
+    }
+
+    .bus-card .right {
+      text-align: right;
+    }
+
+    .bus-card .right .minutes {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1;
+    }
+
+    .bus-card .right .minutes span {
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: #94a3b8;
+    }
+
+    .bus-card .right .time {
+      font-size: 0.78rem;
+      color: #475569;
+      margin-top: 4px;
+    }
+
+    .bus-card.soon .right .minutes {
+      color: #4ade80;
+    }
+
+    #status {
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+      padding: 24px;
+      color: #475569;
+      font-size: 0.9rem;
+    }
+
+    #status.error {
+      color: #f87171;
+    }
+
+    footer {
+      margin-top: 48px;
+      font-size: 0.75rem;
+      color: #334155;
+      text-align: center;
+    }
+
+    .refresh-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    #last-updated {
+      font-size: 0.8rem;
+      color: #475569;
+    }
+
+    button#refresh-btn {
+      background: #1e2330;
+      border: 1px solid #2d3448;
+      color: #94a3b8;
+      font-size: 0.8rem;
+      padding: 6px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    button#refresh-btn:hover {
+      background: #2d3448;
+      color: #e2e8f0;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="badge">LIVE</div>
+    <h1>Route 555</h1>
+    <p>Loganholme — Stop 600656</p>
+  </header>
+
+  <div class="refresh-row">
+    <span id="last-updated">Loading…</span>
+    <button id="refresh-btn">↻ Refresh</button>
+  </div>
+
+  <div id="bus-list">
+    <div id="status">Fetching live data…</div>
+  </div>
+
+  <footer>Data sourced from TransLink GTFS Realtime &mdash; South East Queensland</footer>
+
+  <script>
+    const list = document.getElementById('bus-list');
+    const statusEl = document.getElementById('status');
+    const lastUpdated = document.getElementById('last-updated');
+
+    function formatTime(iso) {
+      return new Date(iso).toLocaleTimeString('en-AU', {
+        hour: '2-digit', minute: '2-digit', hour12: true,
+      });
+    }
+
+    async function fetchBuses() {
+      statusEl.textContent = 'Fetching live data…';
+      statusEl.className = '';
+      list.innerHTML = '';
+      list.appendChild(statusEl);
+
+      try {
+        const res = await fetch('/buses');
+        if (!res.ok) throw new Error(`Server error: ${res.status}`);
+        const data = await res.json();
+
+        lastUpdated.textContent = `Updated ${new Date(data.fetchedAt).toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true })}`;
+
+        if (!data.buses || data.buses.length === 0) {
+          statusEl.textContent = 'No upcoming buses found for Route 555 at this stop.';
+          list.innerHTML = '';
+          list.appendChild(statusEl);
+          return;
+        }
+
+        list.innerHTML = '';
+        data.buses.forEach((bus, i) => {
+          const card = document.createElement('div');
+          card.className = 'bus-card' + (bus.minutesAway <= 5 ? ' soon' : '');
+          card.style.animationDelay = `${i * 60}ms`;
+          card.innerHTML = `
+            <div class="left">
+              <div class="route">555</div>
+              <div class="trip">Trip ${bus.tripId ?? '—'}</div>
+            </div>
+            <div class="right">
+              <div class="minutes">${bus.minutesAway}<span> min</span></div>
+              <div class="time">${formatTime(bus.departureISO)}</div>
+            </div>
+          `;
+          list.appendChild(card);
+        });
+
+      } catch (err) {
+        statusEl.textContent = `Error: ${err.message}`;
+        statusEl.className = 'error';
+        list.innerHTML = '';
+        list.appendChild(statusEl);
+        lastUpdated.textContent = 'Failed to update';
+      }
+    }
+
+    document.getElementById('refresh-btn').addEventListener('click', fetchBuses);
+
+    // Initial load, then auto-refresh every 60 seconds
+    fetchBuses();
+    setInterval(fetchBuses, 60000);
+  </script>
+</body>
+</html>
