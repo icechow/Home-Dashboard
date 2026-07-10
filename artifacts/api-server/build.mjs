@@ -54,6 +54,8 @@ async function buildAll() {
       "knex",
       "typeorm",
       "protobufjs",
+      "protobufjs/*",
+      "gtfs-realtime-bindings",
       "onnxruntime-node",
       "@tensorflow/*",
       "@prisma/client",
