@@ -3,10 +3,4 @@ modules = ["nodejs-20"]
 
 [[ports]]
 localPort = 3000
-externalPort = 3000
-
-[agent]
-expertMode = true
-
-[deployment]
-deploymentTarget = "cloudrun"
+externalPort = 80
