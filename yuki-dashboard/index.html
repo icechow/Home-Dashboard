@@ -184,7 +184,7 @@
         </div>
 
         <div class="card">
-          <h2>To-do List</h2>
+          <h2>✅ To-do List</h2>
 
           <input id="todo-input" placeholder="New task" />
 
@@ -237,7 +237,7 @@
       /*Weather*/
       async function fetchWeather() {
         try {
-          const res = await fetch("https://yuki-dashboard.replit.app/weather");
+          const res = await fetch("https://transit-dashboard--chow36084.replit.app/weather");
 
           if (!res.ok) {
             throw new Error(res.status);
@@ -309,7 +309,7 @@
         const list = document.getElementById("bus-list");
 
         try {
-          const res = await fetch("https://yuki-dashboard.replit.app/buses");
+          const res = await fetch("https://transit-dashboard--chow36084.replit.app/buses");
 
           if (!res.ok) throw new Error(res.status);
 

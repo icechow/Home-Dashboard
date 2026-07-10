@@ -7,8 +7,11 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static("__dirname"));
+app.use(express.static("."));
 
+app.get("/", (req, res) => {
+  res.sendFile(__dirname + "/index.html");
+});
 
 // -------------------------
 // Weather + UV (Brisbane)

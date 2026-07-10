@@ -1,12 +1,10 @@
-run = "cd yuki-dashboard && PORT=3000 npm start"
+run = "npm start"
+
 modules = ["nodejs-20"]
 
 [[ports]]
 localPort = 3000
-externalPort = 3000
-
-[agent]
-expertMode = true
+externalPort = 80
 
 [deployment]
-deploymentTarget = "cloudrun"
+run = "npm start"
