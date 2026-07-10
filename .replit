@@ -21,25 +21,3 @@ run = "npm start"
 expertMode = true
 
 [workflows]
-runButton = "Project"
-
-[[workflows.workflow]]
-name = "Project"
-mode = "parallel"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "Yuki Dashboard"
-
-[[workflows.workflow]]
-name = "Yuki Dashboard"
-author = "agent"
-
-[workflows.workflow.metadata]
-outputType = "webview"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "cd yuki-dashboard && PORT=3001 npm start"
-waitForPort = 3001

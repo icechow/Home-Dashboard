@@ -1,8 +1,12 @@
 import express, { type Express } from "express";
 import cors from "cors";
 import pinoHttp from "pino-http";
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
 import router from "./routes";
 import { logger } from "./lib/logger";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const app: Express = express();
 
@@ -28,6 +32,9 @@ app.use(
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Serve the dashboard HTML at the root
+app.use(express.static(join(__dirname, "../public")));
 
 app.use("/api", router);
 
