@@ -197,7 +197,7 @@
       list.appendChild(statusEl);
 
       try {
-        const res = await fetch('/buses');
+        const res = await fetch('/api/buses');
         if (!res.ok) throw new Error(`Server error: ${res.status}`);
         const data = await res.json();
 
@@ -239,7 +239,6 @@
 
     document.getElementById('refresh-btn').addEventListener('click', fetchBuses);
 
-    // Initial load, then auto-refresh every 60 seconds
     fetchBuses();
     setInterval(fetchBuses, 60000);
   </script>

@@ -1,6 +1,10 @@
 run = "cd yuki-dashboard && PORT=3000 npm start"
+
 modules = ["nodejs-20"]
 
 [[ports]]
 localPort = 3000
-externalPort = 80
+externalPort = 3000
+
+[deployment]
+run = ["bash", "-c", "cd yuki-dashboard && npm start"]

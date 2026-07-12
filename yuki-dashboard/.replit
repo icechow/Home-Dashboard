@@ -1,0 +1,10 @@
+run = "PORT=3000 npm start"
+
+modules = ["nodejs-20"]
+
+[[ports]]
+localPort = 3000
+externalPort = 80
+
+[deployment]
+run = ["npm", "start"]
